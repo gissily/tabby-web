@@ -43,7 +43,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "tabby.middleware.TokenMiddleware",
-    "tabby.middleware.GAMiddleware",
 ]
 
 ROOT_URLCONF = "tabby.urls"
@@ -173,7 +172,6 @@ FRONTEND_BUILD_DIR = Path(
 FRONTEND_URL = None
 CORS_EXTRA_URL = None
 BACKEND_URL = None
-GITHUB_ELIGIBLE_SPONSORSHIPS = None
 
 for key in [
     "CORS_EXTRA_URL",
@@ -200,18 +198,8 @@ for key in [
     "CONNECTION_GATEWAY_AUTH_CA",
     "CONNECTION_GATEWAY_AUTH_CERTIFICATE",
     "CONNECTION_GATEWAY_AUTH_KEY",
-    "GITHUB_ELIGIBLE_SPONSORSHIPS",
-    "GITHUB_SPONSORS_MIN_PAYMENT",
-    "GA_ID",
-    "GA_DOMAIN",
 ]:
     globals()[key] = os.getenv(key)
-
-
-for key in [
-    "GITHUB_SPONSORS_MIN_PAYMENT",
-]:
-    globals()[key] = int(globals()[key]) if globals()[key] else None
 
 
 for key in [
@@ -222,11 +210,6 @@ for key in [
     v = globals()[key]
     if v and not os.path.exists(v):
         raise ValueError(f"{v} does not exist")
-
-if GITHUB_ELIGIBLE_SPONSORSHIPS:
-    GITHUB_ELIGIBLE_SPONSORSHIPS = GITHUB_ELIGIBLE_SPONSORSHIPS.split(",")
-else:
-    GITHUB_ELIGIBLE_SPONSORSHIPS = []
 
 
 STATIC_URL = "/static/"

@@ -1,0 +1,16 @@
+Django==4.2.30
+djangorestframework==3.17.2
+djangorestframework-dataclasses==1.4.0
+social-auth-app-django==5.4.3
+social-auth-core==4.8.7
+python-dotenv==1.2.4
+websockets==14.2
+dj-database-url==2.3.0
+mysqlclient==2.3.0
+gunicorn==23.0.0
+requests==2.34.2
+django-cors-headers==4.9.0
+cryptography==44.0.3
+fsspec==2024.12.0
+whitenoise==6.12.0
+python-jose[cryptography]==3.5.0

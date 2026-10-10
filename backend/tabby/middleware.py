@@ -1,8 +1,5 @@
-import logging
 from tabby.app.models import User
-from django.conf import settings
 from django.contrib.auth import login
-from pyga.requests import Tracker, Page, Session, Visitor
 
 
 class BaseMiddleware:
@@ -32,22 +29,5 @@ class TokenMiddleware(BaseMiddleware):
 
         if user:
             response.set_cookie = lambda *args, **kwargs: None
-
-        return response
-
-
-class GAMiddleware(BaseMiddleware):
-    def __init__(self, get_response):
-        super().__init__(get_response)
-        if settings.GA_ID:
-            self.tracker = Tracker(settings.GA_ID, settings.GA_DOMAIN)
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        if settings.GA_ID and request.path in ["/", "/app"]:
-            try:
-                self.tracker.track_pageview(Page(request.path), Session(), Visitor())
-            except Exception:
-                logging.exception()
 
         return response

@@ -8,10 +8,10 @@ services:
         depends_on:
         - db
         ports:
-        - 9090:80
+        - 9090:8000
         environment:
         - DATABASE_URL=mysql://root:123@db/tabby
-        - PORT=80
+        - PORT=8000
         - DEBUG=False
         - DOCKERIZE_ARGS="-wait tcp://db:3306 -timeout 60s"
         #

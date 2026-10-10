@@ -63,4 +63,6 @@ class Command(BaseCommand):
             if fs.exists(target):
                 fs.rm(target, recursive=True)
             fs.mkdir(target)
-            fs.put(str(tempdir), target, recursive=True)
+            # Upload each plugin directly to avoid temp subdirectory issues
+            for plugin in plugin_list:
+                fs.put(str(tempdir / plugin), f"{target}/{plugin}", recursive=True)

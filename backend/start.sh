@@ -3,5 +3,5 @@ if [[ -n "$DOCKERIZE_ARGS" ]]; then
     dockerize $DOCKERIZE_ARGS
 fi
 cd /app
-/venv/*/bin/python ./manage.py migrate
-exec /venv/*/bin/gunicorn
+/app/venv/bin/python ./manage.py migrate
+exec /app/venv/bin/gunicorn
