@@ -163,6 +163,18 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
 )
 
+# Social Auth HTTP/HTTPS proxy configuration.
+# social-auth-core reads SOCIAL_AUTH_PROXIES and passes it to requests.
+# Only set when at least one proxy env var is non-empty.
+_social_auth_http_proxy = os.getenv("HTTP_PROXY") or os.getenv("http_proxy")
+_social_auth_https_proxy = os.getenv("HTTPS_PROXY") or os.getenv("https_proxy")
+if _social_auth_http_proxy or _social_auth_https_proxy:
+    SOCIAL_AUTH_PROXIES = {}
+    if _social_auth_http_proxy:
+        SOCIAL_AUTH_PROXIES["http"] = _social_auth_http_proxy
+    if _social_auth_https_proxy:
+        SOCIAL_AUTH_PROXIES["https"] = _social_auth_https_proxy
+
 APP_DIST_STORAGE = os.getenv("APP_DIST_STORAGE", "file://" + str(BASE_DIR / "app-dist"))
 NPM_REGISTRY = os.getenv("NPM_REGISTRY", "https://registry.npmjs.org").rstrip("/")
 FRONTEND_BUILD_DIR = Path(
