@@ -1,5 +1,5 @@
 #!/bin/sh
-if [[ -n "$DOCKERIZE_ARGS" ]]; then
+if [ -n "$DOCKERIZE_ARGS" ]; then
     dockerize $DOCKERIZE_ARGS
 fi
 cd /app
