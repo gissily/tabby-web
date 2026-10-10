@@ -25,7 +25,9 @@ ARG EXTRA_DEPS
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    default-libmysqlclient-dev \
+    libmariadb-dev \
+    libffi-dev \
+    libssl-dev \
     curl \
     bash \
     && rm -rf /var/lib/apt/lists/*
@@ -33,10 +35,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 RUN python -m venv /app/venv
-ENV PATH="/app/venv/bin:$PATH"
 
 COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 COPY backend/manage.py backend/gunicorn.conf.py ./
 COPY backend/tabby tabby
@@ -44,8 +45,8 @@ COPY --from=frontend /app/build /frontend
 
 ARG BUNDLED_TABBY=1.0.187-nightly.1
 
-RUN FRONTEND_BUILD_DIR=/frontend python ./manage.py collectstatic --noinput
-RUN APP_DIST_STORAGE=file:///app-dist python ./manage.py add_version ${BUNDLED_TABBY}
+RUN FRONTEND_BUILD_DIR=/frontend /app/venv/bin/python ./manage.py collectstatic --noinput
+RUN APP_DIST_STORAGE=file:///app-dist /app/venv/bin/python ./manage.py add_version ${BUNDLED_TABBY}
 
 # ----
 
