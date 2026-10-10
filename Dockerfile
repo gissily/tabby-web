@@ -54,7 +54,7 @@ RUN APP_DIST_STORAGE=file:///app-dist /app/venv/bin/python ./manage.py add_versi
 FROM python:3.12-slim AS backend
 
 ENV APP_DIST_STORAGE file:///app-dist
-ENV DOCKERIZE_VERSION v0.6.1
+ENV DOCKERIZE_VERSION v0.15.0
 ENV DOCKERIZE_ARCH amd64
 ARG TARGETPLATFORM
 RUN apt-get update && apt-get install -y --no-install-recommends \
