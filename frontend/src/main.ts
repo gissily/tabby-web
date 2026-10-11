@@ -21,8 +21,8 @@ const ROUTES: Routes = [
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(withXsrfConfiguration({
-      cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken',
+      cookieName: 'XSRF-TOKEN',
+      headerName: 'X-XSRF-TOKEN',
     })),
     provideRouter(ROUTES),
   ],
