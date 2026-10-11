@@ -1,0 +1,85 @@
+<div class="modal-header">
+    <h3 class="modal-title">Settings</h3>
+</div>
+
+<div class="modal-body">
+    <div class="mb-3">
+        <h5>GitHub account</h5>
+        <a *ngIf="!user.github_username" class="btn btn-info" [href]="commonService.backendURL + '/api/1/auth/social/login/github'">
+            <fa-icon [icon]="_githubIcon" [fixedWidth]="true"></fa-icon>
+            <span>Connect a GitHub account</span>
+        </a>
+        <div *ngIf="user.github_username" class="alert alert-success d-flex">
+            <fa-icon class="me-2" [icon]="_okIcon" [fixedWidth]="true"></fa-icon>
+            <div>
+                <div>Connected as <strong>{{user.github_username}}</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-4">
+        <h5>Config sync</h5>
+        <div class="d-flex aling-items-stretch mb-3">
+            <div class="form-floating w-100">
+                <input type="text" class="form-control" [readonly]="true" [ngModel]="user.config_sync_token">
+                <label>Sync token for the Tabby app</label>
+            </div>
+            <button class="btn btn-dark" [cdkCopyToClipboard]="user.config_sync_token">
+                <fa-icon [icon]="_copyIcon" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-4">
+        <h5>Connection gateway</h5>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="customGatewayEnabled">
+            <label class="form-check-label">Use a custom connection gateway</label>
+        </div>
+
+        <small class="text-muted">This allows you to securely route connections through your own hosted gateway. See <a href="https://github.com/Eugeny/tabby-connection-gateway#readme" target="_blank">tabby-connection-gateway</a> for setup instructions.</small>
+    </div>
+
+    <form>
+        <input type="text" class="d-none" name="fakeusername">
+        <input type="password" class="d-none" name="fakepassword">
+
+        <div *ngIf="customGatewayEnabled" class="mb-3">
+            <div class="form-floating">
+                <input type="text" class="form-control" name="custom_connection_gateway" [(ngModel)]="user.custom_connection_gateway" placeholder="wss://1.2.3.4" autocomplete="off">
+                <label>Gateway address</label>
+            </div>
+        </div>
+
+        <div *ngIf="customGatewayEnabled" class="mb-3">
+            <div class="form-floating">
+                <input type="password" class="form-control" name="custom_connection_gateway_token" [(ngModel)]="user.custom_connection_gateway_token" placeholder="123" autocomplete="new-password">
+                <label>Gateway authentication token</label>
+            </div>
+        </div>
+    </form>
+
+    <div *ngIf="appConnector.sockets.length" class="mb-3 mt-4">
+        <h5>Active connections</h5>
+        <connection-list></connection-list>
+    </div>
+
+    <div class="mb-3 mt-4">
+        <h5>About</h5>
+        <a class="btn btn-secondary me-2" href="https://github.com/eugeny/tabby-web" target="_blank">
+            <fa-icon [icon]="_githubIcon" [fixedWidth]="true"></fa-icon>
+            <span>eugeny/tabby-web</span>
+        </a>
+        <a class="btn btn-secondary me-2" href="https://github.com/eugeny/tabby" target="_blank">
+            <fa-icon [icon]="_githubIcon" [fixedWidth]="true"></fa-icon>
+            <span>eugeny/tabby</span>
+        </a>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="text-muted">Account ID: {{user.id}}</div>
+    <div class="ms-auto"></div>
+    <button class="btn btn-primary" (click)="apply()">Apply</button>
+    <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+</div>

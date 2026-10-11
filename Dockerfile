@@ -1,22 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM node:12-alpine AS frontend-build
+FROM node:18-alpine AS frontend-build
 WORKDIR /app
 COPY frontend/package.json frontend/yarn.lock ./
 RUN yarn install --frozen-lockfile --network-timeout 1000000
-COPY frontend/webpack* frontend/tsconfig.json ./
-COPY frontend/assets assets
-COPY frontend/src src
-COPY frontend/theme theme
-RUN yarn run build
-RUN yarn run build:server
-
-FROM node:12-alpine AS frontend
-WORKDIR /app
-COPY --from=frontend-build /app/build build
-COPY --from=frontend-build /app/build-server build-server
-COPY frontend/package.json .
-
-CMD ["npm", "start"]
+COPY frontend/ .
+RUN yarn build
+# Copy standalone HTML pages that aren't part of Angular app
+RUN mkdir -p /app/build/browser && cp /app/src/terminal.html /app/src/demo.html /app/build/browser/ 2>/dev/null || true
 
 # ----
 
@@ -42,11 +32,11 @@ RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 COPY backend/manage.py backend/gunicorn.conf.py ./
 COPY backend/tabby tabby
-COPY --from=frontend /app/build /frontend
+COPY --from=frontend-build /app/build/browser /frontend
 
-ARG BUNDLED_TABBY=1.0.187-nightly.1
+ARG BUNDLED_TABBY=1.0.231-nightly.0
 
-RUN FRONTEND_BUILD_DIR=/frontend /app/venv/bin/python ./manage.py collectstatic --noinput
+RUN mkdir -p /app/public/static && cp -r /frontend/* /app/public/static/ && FRONTEND_BUILD_DIR=/frontend /app/venv/bin/python ./manage.py collectstatic --noinput
 RUN APP_DIST_STORAGE=file:///app-dist /app/venv/bin/python ./manage.py add_version ${BUNDLED_TABBY}
 
 # ----

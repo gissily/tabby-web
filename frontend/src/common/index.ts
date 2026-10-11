@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 import { ModuleWithProviders, NgModule } from '@angular/core'
-import { HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { BackendXsrfInterceptor, UniversalInterceptor } from './interceptor'
 
 @NgModule({
-  imports: [
-    HttpClientXsrfModule,
-  ],
+  imports: [],
 })
 export class CommonAppModule {
   static forRoot (): ModuleWithProviders<CommonAppModule> {
@@ -14,7 +12,6 @@ export class CommonAppModule {
       ngModule: CommonAppModule,
       providers: [
         { provide: HTTP_INTERCEPTORS, useClass: UniversalInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: BackendXsrfInterceptor, multi: true },
       ],
     }
   }

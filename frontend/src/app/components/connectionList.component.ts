@@ -1,14 +1,14 @@
 import { Component } from '@angular/core'
 import { AppConnectorService, SocketProxy } from '../services/appConnector.service'
-import { faCircle, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faCircle, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'connection-list',
-  templateUrl: './connectionList.component.pug',
+  templateUrl: './connectionList.component.html',
 })
 export class ConnectionListComponent {
   _circleIcon = faCircle
-  _closeIcon = faTimes
+  _closeIcon = faXmark
 
   constructor (
     public appConnector: AppConnectorService,

@@ -3,24 +3,24 @@ import { HttpClient } from '@angular/common/http'
 import { Title } from '@angular/platform-browser'
 import { AppConnectorService } from '../services/appConnector.service'
 
-import { faCog, faExclamationTriangle, faFile, faPlus, faSave, faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faExclamationTriangle, faFile, faPlus, faSave, faRightToBracket, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { SettingsModalComponent } from './settingsModal.component'
 import { ConfigModalComponent } from './configModal.component'
 import { ConfigService, LoginService } from 'src/common'
-import { combineLatest } from 'rxjs'
+import { combineLatest, firstValueFrom } from 'rxjs'
 import { Config, Version } from 'src/api'
 
 @Component({
   selector: 'main',
-  templateUrl: './main.component.pug',
+  templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
-  _logo = require('../../../assets/logo.svg')
-  _settingsIcon = faCog
-  _loginIcon = faSignInAlt
-  _logoutIcon = faSignOutAlt
+  _logo = 'assets/logo.svg'
+  _settingsIcon = faGear
+  _loginIcon = faRightToBracket
+  _logoutIcon = faRightFromBracket
   _addIcon = faPlus
   _configIcon = faFile
   _saveIcon = faSave
@@ -56,7 +56,7 @@ export class MainComponent {
   }
 
   async ngAfterViewInit () {
-    await this.loginService.ready$.toPromise()
+    await firstValueFrom(this.loginService.ready$)
 
     combineLatest(
       this.config.activeConfig$,
@@ -65,7 +65,7 @@ export class MainComponent {
       this.reloadApp(config, version)
     })
 
-    await this.config.ready$.toPromise()
+    await firstValueFrom(this.config.ready$)
     await this.config.selectDefaultConfig()
   }
 

@@ -1,4 +1,4 @@
-import { AsyncSubject } from 'rxjs'
+import { AsyncSubject, firstValueFrom } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { User } from '../../api'
@@ -22,7 +22,7 @@ export class LoginService {
 
   private async init () {
     try {
-      this.user = (await this.http.get('/api/1/user').toPromise()) as User
+      this.user = (await firstValueFrom(this.http.get('/api/1/user'))) as User
     } catch {
       this.user = null
     }

@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { Subject } from 'rxjs'
+import { Subject, firstValueFrom } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
 import { Injectable, Injector, NgZone } from '@angular/core'
@@ -165,7 +165,7 @@ export class AppConnectorService {
 
     this.configUpdate.pipe(debounceTime(1000)).subscribe(async content => {
       if (this.loginService.user) {
-        const result = await this.http.patch(`/api/1/configs/${this.config.id}`, { content }).toPromise()
+        const result = await firstValueFrom(this.http.patch(`/api/1/configs/${this.config.id}`, { content }))
         Object.assign(this.config, result)
       }
     })
@@ -222,7 +222,7 @@ export class AppConnectorService {
 
   async chooseConnectionGateway (): Promise<Gateway> {
     try {
-      return await this.http.post('/api/1/gateways/choose', {}).toPromise() as Gateway
+      return await firstValueFrom(this.http.post('/api/1/gateways/choose', {})) as Gateway
     } catch (err){
       if (err.status === 503) {
         throw new Error('All connection gateways are unavailable right now')

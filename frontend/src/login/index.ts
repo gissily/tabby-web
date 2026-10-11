@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
-import { NgxImageZoomModule } from 'ngx-image-zoom'
 
 import { LoginComponent } from './components/login.component'
 import { CommonAppModule } from 'src/common'
@@ -24,7 +23,6 @@ const ROUTES = [
     FormsModule,
     NgbNavModule,
     FontAwesomeModule,
-    NgxImageZoomModule,
     RouterModule.forChild(ROUTES),
   ],
   declarations: [

@@ -7,7 +7,7 @@ import { Config, Version } from 'src/api'
 
 @Component({
   selector: 'config-modal',
-  templateUrl: './configModal.component.pug',
+  templateUrl: './configModal.component.html',
   // styleUrls: ['./settingsModal.component.scss'],
 })
 export class ConfigModalComponent {

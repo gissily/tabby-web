@@ -7,7 +7,6 @@ export interface User {
   config_sync_token: string
   github_username: string
   is_pro: boolean
-  is_sponsor: boolean
 }
 
 export interface Config {

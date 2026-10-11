@@ -24,7 +24,7 @@ const iconMap: Record<string, IconDefinition> = {
 
 @Component({
   selector: 'login',
-  templateUrl: './login.component.pug',
+  templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {

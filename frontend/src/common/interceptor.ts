@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpXsrfTokenExtractor } from '@angular/common/http'
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { CommonService } from './services/common.service'
 
@@ -23,16 +23,11 @@ export class UniversalInterceptor implements HttpInterceptor {
 export class BackendXsrfInterceptor implements HttpInterceptor {
   constructor (
     private commonService: CommonService,
-    private tokenExtractor: HttpXsrfTokenExtractor,
   ) { }
 
   intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.commonService.backendURL && req.url.startsWith(this.commonService.backendURL)) {
-      const token = this.tokenExtractor.getToken()
-      if (token !== null) {
-        req = req.clone({ setHeaders: { 'X-XSRF-TOKEN': token } })
-      }
-    }
+    // XSRF token is now handled by provideHttpClient withXsrfConfiguration
+    // This interceptor can be simplified or removed if not needed
     return next.handle(req)
   }
 }

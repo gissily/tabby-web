@@ -1,0 +1,12 @@
+<div class="login-view" *ngIf="ready">
+    <div class="buttons" *ngIf="providers.length">
+        <a *ngFor="let provider of providers" [class]="provider.cls" [href]="commonService.backendURL + '/api/1/auth/social/login/' + provider.id" class="btn">
+            <fa-icon [icon]="provider.faIcon" [fixedWidth]="true"></fa-icon>
+            <span>Log in with {{provider.name}}</span>
+        </a>
+    </div>
+    <div class="no-providers" *ngIf="!providers.length">
+        <p>No authentication providers configured.</p>
+        <p class="text-muted">Contact your administrator.</p>
+    </div>
+</div>

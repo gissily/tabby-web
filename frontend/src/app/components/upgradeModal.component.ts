@@ -9,7 +9,7 @@ import { User } from 'src/api'
 
 @Component({
   selector: 'upgrade-modal',
-  templateUrl: './upgradeModal.component.pug',
+  templateUrl: './upgradeModal.component.html',
 })
 export class UpgradeModalComponent {
   user: User

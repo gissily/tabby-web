@@ -1,5 +1,5 @@
-import * as semverCompare from 'semver/functions/compare-loose'
-import { AsyncSubject, Subject } from 'rxjs'
+import semverCompare from 'semver/functions/compare-loose'
+import { AsyncSubject, Subject, firstValueFrom } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Config, User, Version } from '../../api'
@@ -33,7 +33,7 @@ export class ConfigService {
     if (!this.loginService.user) {
       return
     }
-    await this.http.put('/api/1/user', this.user).toPromise()
+    await firstValueFrom(this.http.put('/api/1/user', this.user))
   }
 
   async createNewConfig (): Promise<Config> {
@@ -52,7 +52,7 @@ export class ConfigService {
       this.configs.push(config)
       return config
     }
-    const config = (await this.http.post('/api/1/configs', configData).toPromise()) as Config
+    const config = (await firstValueFrom(this.http.post('/api/1/configs', configData))) as Config
     this.configs.push(config)
     return config
   }
@@ -64,7 +64,7 @@ export class ConfigService {
   async duplicateActiveConfig (): Promise<void> {
     let copy: any = { ...this._activeConfig, id: undefined }
     if (this.loginService.user) {
-      copy = (await this.http.post('/api/1/configs', copy).toPromise()) as Config
+      copy = (await firstValueFrom(this.http.post('/api/1/configs', copy))) as Config
     }
     this.configs.push(copy)
   }
@@ -91,25 +91,25 @@ export class ConfigService {
   }
 
   async selectDefaultConfig (): Promise<void> {
-    await this.ready$.toPromise()
-    await this.loginService.ready$.toPromise()
+    await firstValueFrom(this.ready$)
+    await firstValueFrom(this.loginService.ready$)
     this.selectConfig(this.configs.find(c => c.id === this.loginService.user?.active_config) ?? this.configs[0])
   }
 
   async deleteConfig (config: Config): Promise<void> {
     if (this.loginService.user) {
-      await this.http.delete(`/api/1/configs/${config.id}`).toPromise()
+      await firstValueFrom(this.http.delete(`/api/1/configs/${config.id}`))
     }
     this.configs = this.configs.filter(x => x.id !== config.id)
   }
 
   private async init () {
-    await this.loginService.ready$.toPromise()
+    await firstValueFrom(this.loginService.ready$)
 
     if (this.loginService.user) {
-      this.configs = (await this.http.get('/api/1/configs').toPromise()) as Config[]
+      this.configs = (await firstValueFrom(this.http.get('/api/1/configs'))) as Config[]
     }
-    this.versions = (await this.http.get('/api/1/versions').toPromise()) as Version[]
+    this.versions = (await firstValueFrom(this.http.get('/api/1/versions'))) as Version[]
     this.versions.sort((a, b) => -semverCompare(a.version, b.version))
 
     if (!this.configs.length && this.versions.length) {

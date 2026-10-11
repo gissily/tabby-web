@@ -4,6 +4,7 @@ from fsspec.implementations.local import LocalFileSystem
 from django.conf import settings
 from django.http.response import (
     FileResponse,
+    HttpResponse,
     HttpResponseNotFound,
     HttpResponseRedirect,
 )
@@ -16,8 +17,37 @@ class IndexView(APIView):
     def get(self, request, format=None):
         if settings.FRONTEND_URL:
             return HttpResponseRedirect(settings.FRONTEND_URL)
+        import os
+        html_path = os.path.join(str(settings.STATIC_ROOT), "index.html")
+        with open(html_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        backend_url = request.scheme + '://' + request.get_host()
+        html_content = html_content.replace('{{backendURL}}', backend_url)
+        response = HttpResponse(html_content, content_type='text/html')
+        response["X-Frame-Options"] = "SAMEORIGIN"
+        return response
+
+
+class StaticFileView(APIView):
+    """Serve any static file from STATIC_ROOT at root path."""
+    def get(self, request, *args, **kwargs):
+        path = kwargs.get('static_path', '')
         return static.serve(
-            request, "index.html", document_root=str(settings.STATIC_ROOT)
+            request, path, document_root=str(settings.STATIC_ROOT)
+        )
+
+
+class FaviconView(APIView):
+    def get(self, request, format=None):
+        return static.serve(
+            request, "favicon.png", document_root=str(settings.STATIC_ROOT)
+        )
+
+
+class FaviconIcoView(APIView):
+    def get(self, request, format=None):
+        return static.serve(
+            request, "favicon.png", document_root=str(settings.STATIC_ROOT)
         )
 
 

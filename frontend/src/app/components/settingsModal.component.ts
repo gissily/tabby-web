@@ -8,7 +8,7 @@ import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'settings-modal',
-  templateUrl: './settingsModal.component.pug',
+  templateUrl: './settingsModal.component.html',
 })
 export class SettingsModalComponent {
   user: User
@@ -31,9 +31,11 @@ export class SettingsModalComponent {
   }
 
   async apply () {
-    Object.assign(this.loginService.user, this.user)
-    this.modalInstance.close()
-    await this.loginService.updateUser()
+    if (this.loginService.user) {
+      Object.assign(this.loginService.user, this.user)
+      this.modalInstance.close()
+      await this.loginService.updateUser()
+    }
   }
 
   cancel () {

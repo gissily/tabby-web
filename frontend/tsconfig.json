@@ -1,32 +1,33 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "src/",
-    "module": "esnext",
-    "target": "es6",
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "removeComments": false,
-    "emitDeclarationOnly": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
     "sourceMap": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "strictNullChecks": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
     "lib": [
-      "dom",
-      "es5",
-      "es6",
-      "es7"
-    ],
-    "paths": {
-      "src/*": ["./*"]
-    }
+      "ES2022",
+      "dom"
+    ]
   },
-  "include": ["src"]
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": false,
+    "strictInputAccessModifiers": false,
+    "strictTemplates": false
+  }
 }
