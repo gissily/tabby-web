@@ -18,7 +18,6 @@ export class CommonService {
       }
     }
 
-    console.log(this.backendURL)
     if (this.backendURL.endsWith('/')) {
       this.backendURL = this.backendURL.slice(0, -1)
     }
