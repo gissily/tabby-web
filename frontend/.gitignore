@@ -6,3 +6,4 @@ build-server
 *.d.ts
 yarn-error.log
 static
+.angular
