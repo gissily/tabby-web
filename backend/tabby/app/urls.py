@@ -15,5 +15,4 @@ urlpatterns = [
     path("terminal", views.TerminalView.as_view()),
     path("demo", views.DemoView.as_view()),
     path("", include(api.urlpatterns)),
-    path("<path:static_path>", views.StaticFileView.as_view()),
 ]
