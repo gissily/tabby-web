@@ -12,7 +12,7 @@
 - `frontend/` — Angular 22 standalone SPA (signals, `@if`/`@for`, `ChangeDetectionStrategy.Eager`):
   - entry: `frontend/src/main.ts`; theme: `frontend/theme/index.scss`
   - routes: `''` → `MainComponent`, `'login'` → `LoginComponent`
-  - standalone pages: `terminal`, `demo` (pre-existing gap §2.3: not re-added to build)
+  - standalone pages: `terminal`, `demo`
   - API: `frontend/src/api.ts`; shared services: `frontend/src/common/`; components: `frontend/src/app/components/`; connector: `frontend/src/app/services/appConnector.service.ts`
 - `backend/` — Django 4.2 + DRF + social-auth (OAuth) + websockets gateway; entry `backend/tabby/wsgi.py`.
 
@@ -20,7 +20,7 @@
 
 - Frontend (`frontend/`): `yarn install`, `yarn build`, `yarn lint` (`eslint src`), `yarn start` (`ng serve`). Requires **Node >= 24.15.0**.
 - Backend (`backend/`): `poetry install`; `manage.py migrate`; `./manage.sh add_version <version>`; gunicorn via `backend/gunicorn.conf.py`.
-- Full stack: `docker compose up -d` → backend `:9090`, frontend `tabby-current` (ghcr.io/gissily/tabby-web) `:8080`, db (mariadb). Prebuilt: `docker-compose -f docker-compose.prebuilt.yml up -d` → ghcr image `:9090`.
+- Full stack: `docker compose up -d` → backend `:9090`, db (mariadb). Prebuilt: `docker-compose -f docker-compose.prebuilt.yml up -d` → ghcr image `:9090`.
 - Deploy build: `docker compose build tabby` (frontend stage `node:24-alpine`; backend layers cached). **Stop compose before build; restart after.**
 
 ## Gotchas
