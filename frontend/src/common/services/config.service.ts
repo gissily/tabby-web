@@ -52,7 +52,7 @@ export class ConfigService {
       this.configs.push(config)
       return config
     }
-    const config = (await firstValueFrom(this.http.post('/api/1/configs', configData))) as Config
+    const config = await firstValueFrom(this.http.post<Config>('/api/1/configs', configData))
     this.configs.push(config)
     return config
   }
@@ -64,7 +64,7 @@ export class ConfigService {
   async duplicateActiveConfig (): Promise<void> {
     let copy: any = { ...this._activeConfig, id: undefined }
     if (this.loginService.user) {
-      copy = (await firstValueFrom(this.http.post('/api/1/configs', copy))) as Config
+      copy = await firstValueFrom(this.http.post<Config>('/api/1/configs', copy))
     }
     this.configs.push(copy)
   }
@@ -75,11 +75,8 @@ export class ConfigService {
   }
 
   async selectConfig (config: Config): Promise<void> {
-    let matchingVersion = this.versions.find(x => x.version === config.last_used_with_version)
-    if (!matchingVersion) {
-      // TODO ask to upgrade
-      matchingVersion = this.versions[0]
-    }
+    // TODO ask to upgrade
+    const matchingVersion = this.versions.find(x => x.version === config.last_used_with_version) ?? this.versions[0]
 
     this._activeConfig = config
     this.activeConfig$.next(config)
@@ -107,9 +104,9 @@ export class ConfigService {
     await firstValueFrom(this.loginService.ready$)
 
     if (this.loginService.user) {
-      this.configs = (await firstValueFrom(this.http.get('/api/1/configs'))) as Config[]
+      this.configs = await firstValueFrom(this.http.get<Config[]>('/api/1/configs'))
     }
-    this.versions = (await firstValueFrom(this.http.get('/api/1/versions'))) as Version[]
+    this.versions = await firstValueFrom(this.http.get<Version[]>('/api/1/versions'))
     this.versions.sort((a, b) => -semverCompare(a.version, b.version))
 
     if (!this.configs.length && this.versions.length) {

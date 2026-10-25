@@ -18,16 +18,3 @@ export class UniversalInterceptor implements HttpInterceptor {
     return next.handle(request)
   }
 }
-
-@Injectable({ providedIn: 'root' })
-export class BackendXsrfInterceptor implements HttpInterceptor {
-  constructor (
-    private commonService: CommonService,
-  ) { }
-
-  intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // XSRF token is now handled by provideHttpClient withXsrfConfiguration
-    // This interceptor can be simplified or removed if not needed
-    return next.handle(req)
-  }
-}

@@ -17,12 +17,12 @@ export class LoginService {
     if (!this.user) {
       return
     }
-    await this.http.put('/api/1/user', this.user).toPromise()
+    await firstValueFrom(this.http.put('/api/1/user', this.user))
   }
 
   private async init () {
     try {
-      this.user = (await firstValueFrom(this.http.get('/api/1/user'))) as User
+      this.user = await firstValueFrom(this.http.get<User>('/api/1/user'))
     } catch {
       this.user = null
     }

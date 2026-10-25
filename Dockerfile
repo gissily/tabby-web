@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:18-alpine AS frontend-build
+FROM node:24-alpine AS frontend-build
 WORKDIR /app
 COPY frontend/package.json frontend/yarn.lock ./
 RUN yarn install --frozen-lockfile --network-timeout 1000000

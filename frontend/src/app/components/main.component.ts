@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core'
+import { CommonModule } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { Title } from '@angular/platform-browser'
+import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { AppConnectorService } from '../services/appConnector.service'
 
 import { faGear, faExclamationTriangle, faFile, faPlus, faSave, faRightToBracket, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -13,6 +15,9 @@ import { Config, Version } from 'src/api'
 
 @Component({
   selector: 'main',
+  standalone: true,
+  imports: [CommonModule, FaIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
@@ -29,7 +34,6 @@ export class MainComponent {
   showApp = false
   noVersionsAdded = false
   missingVersion: string|undefined
-  showDiscontinuationWarning = location.hostname === 'app.tabby.sh'
 
   @ViewChild('iframe') iframe: ElementRef
 
@@ -59,8 +63,7 @@ export class MainComponent {
     await firstValueFrom(this.loginService.ready$)
 
     combineLatest(
-      this.config.activeConfig$,
-      this.config.activeVersion$
+      [this.config.activeConfig$, this.config.activeVersion$],
     ).subscribe(([config, version]) => {
       this.reloadApp(config, version)
     })
@@ -82,9 +85,9 @@ export class MainComponent {
     this.showApp = true
     this.iframe.nativeElement.src = '/terminal'
     if (this.loginService.user) {
-      await this.http.patch(`/api/1/configs/${config.id}`, {
+      await firstValueFrom(this.http.patch(`/api/1/configs/${config.id}`, {
         last_used_with_version: version.version,
-      }).toPromise()
+      }))
     }
   }
 
@@ -99,8 +102,8 @@ export class MainComponent {
     this.missingVersion = undefined
     // TODO check config incompatibility
     setTimeout(() => {
-      this.appConnector.setState(config, version!)
-      this.loadApp(config, version!)
+      this.appConnector.setState(config, version)
+      this.loadApp(config, version)
     })
   }
 
@@ -113,7 +116,7 @@ export class MainComponent {
   }
 
   async logout () {
-    await this.http.post('/api/1/auth/logout', null).toPromise()
+    await firstValueFrom(this.http.post('/api/1/auth/logout', null))
     location.href = '/'
   }
 }

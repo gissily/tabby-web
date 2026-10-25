@@ -1,5 +1,6 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
@@ -39,6 +40,13 @@
 // Helpers
 @import "bootstrap/scss/helpers";
 @import "bootstrap/scss/utilities/api";
+
+// Restore pre-upgrade Bootstrap 5.0 `$text-muted` behavior ($gray-600 → #6c757d)
+// after Bootstrap 5.3 moved muted text to the theme variable --bs-secondary-color,
+// which resolves dark on this dark background (migration behavior drift).
+:root {
+    --bs-secondary-color: #6c757d;
+}
 
 ::-webkit-scrollbar-track
 {
@@ -83,10 +91,6 @@ a, button {
   fa-icon + * {
     margin-left: 5px;
   }
-}
-
-lib-ngx-image-zoom {
-    display: flex;
 }
 
 ngb-tooltip-window {

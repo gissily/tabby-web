@@ -6,7 +6,6 @@ export interface User {
   custom_connection_gateway_token: string|null
   config_sync_token: string
   github_username: string
-  is_pro: boolean
 }
 
 export interface Config {

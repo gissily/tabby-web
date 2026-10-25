@@ -1,5 +1,9 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+import { ClipboardModule } from '@angular/cdk/clipboard'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
+import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { User } from 'src/api'
 import { CommonService, LoginService } from 'src/common'
 import { AppConnectorService } from '../services/appConnector.service'
@@ -8,6 +12,9 @@ import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'settings-modal',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ClipboardModule, FaIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './settingsModal.component.html',
 })
 export class SettingsModalComponent {

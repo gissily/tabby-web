@@ -3,8 +3,6 @@ import { Subject, firstValueFrom } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
 import { Injectable, Injector, NgZone } from '@angular/core'
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
-import { UpgradeModalComponent } from '../components/upgradeModal.component'
 import { Config, Gateway, Version } from 'src/api'
 import { LoginService, CommonService } from 'src/common'
 
@@ -30,31 +28,16 @@ export class SocketProxy {
 
   private appConnector: AppConnectorService
   private loginService: LoginService
-  private ngbModal: NgbModal
-  private zone: NgZone
 
   constructor (
     injector: Injector,
   ) {
     this.appConnector = injector.get(AppConnectorService)
     this.loginService = injector.get(LoginService)
-    this.ngbModal = injector.get(NgbModal)
-    this.zone = injector.get(NgZone)
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async connect (options: any): Promise<void> {
-    if (!this.loginService.user?.is_pro && this.appConnector.sockets.length > this.appConnector.connectionLimit && !window.sessionStorage['upgrade-skip-active']) {
-      let skipped = false
-      try {
-        skipped = await this.zone.run(() => this.ngbModal.open(UpgradeModalComponent)).result
-      } catch { }
-      if (!skipped) {
-        this.close(new Error('Connection limit reached'))
-        return
-      }
-    }
-
     this.options = options
     if (this.loginService.user?.custom_connection_gateway) {
       this.url = this.loginService.user.custom_connection_gateway
@@ -152,7 +135,6 @@ export class AppConnectorService {
   private configUpdate = new Subject<string>()
   private config: Config
   private version: Version
-  connectionLimit = 3
   sockets: SocketProxy[] = []
 
   constructor (
@@ -163,10 +145,12 @@ export class AppConnectorService {
     private loginService: LoginService,
   ) {
 
-    this.configUpdate.pipe(debounceTime(1000)).subscribe(async content => {
+    this.configUpdate.pipe(debounceTime(1000)).subscribe(content => {
       if (this.loginService.user) {
-        const result = await firstValueFrom(this.http.patch(`/api/1/configs/${this.config.id}`, { content }))
-        Object.assign(this.config, result)
+        firstValueFrom(this.http.patch(`/api/1/configs/${this.config.id}`, { content }))
+          .then(result => {
+            Object.assign(this.config, result)
+          })
       }
     })
   }
@@ -222,7 +206,7 @@ export class AppConnectorService {
 
   async chooseConnectionGateway (): Promise<Gateway> {
     try {
-      return await firstValueFrom(this.http.post('/api/1/gateways/choose', {})) as Gateway
+      return await firstValueFrom(this.http.post<Gateway>('/api/1/gateways/choose', {}))
     } catch (err){
       if (err.status === 503) {
         throw new Error('All connection gateways are unavailable right now')

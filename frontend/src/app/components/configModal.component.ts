@@ -1,5 +1,7 @@
-import { Component } from '@angular/core'
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { NgbActiveModal, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
+import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { AppConnectorService } from '../services/appConnector.service'
 import { ConfigService } from 'src/common'
 import { faCopy, faFile, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +9,9 @@ import { Config, Version } from 'src/api'
 
 @Component({
   selector: 'config-modal',
+  standalone: true,
+  imports: [CommonModule, NgbDropdownModule, FaIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './configModal.component.html',
   // styleUrls: ['./settingsModal.component.scss'],
 })
