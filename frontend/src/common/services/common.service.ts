@@ -1,10 +1,11 @@
-import { Inject, Injectable, Optional } from '@angular/core'
+import { Inject, Service, inject } from '@angular/core'
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CommonService {
   backendURL: string
 
-  constructor (@Inject('BACKEND_URL') @Optional() ssrBackendURL: string) {
+  constructor () {
+    const ssrBackendURL = inject<string>(Inject('BACKEND_URL'), { optional: true })
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const tag = document.querySelector('meta[property=x-tabby-web-backend-url]')! as HTMLMetaElement
     if (ssrBackendURL) {

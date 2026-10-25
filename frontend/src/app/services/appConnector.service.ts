@@ -2,7 +2,7 @@ import { Buffer } from 'buffer'
 import { Subject, firstValueFrom } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
-import { Injectable, Injector, NgZone } from '@angular/core'
+import { Injector, NgZone, Service, inject } from '@angular/core'
 import { Config, Gateway, Version } from 'src/api'
 import { LoginService, CommonService } from 'src/common'
 
@@ -130,21 +130,20 @@ export class SocketProxy {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AppConnectorService {
   private configUpdate = new Subject<string>()
   private config: Config
   private version: Version
   sockets: SocketProxy[] = []
 
-  constructor (
-    private injector: Injector,
-    private http: HttpClient,
-    private commonService: CommonService,
-    private zone: NgZone,
-    private loginService: LoginService,
-  ) {
+  private readonly injector = inject(Injector)
+  private readonly http = inject(HttpClient)
+  private readonly commonService = inject(CommonService)
+  private readonly zone = inject(NgZone)
+  private readonly loginService = inject(LoginService)
 
+  constructor () {
     this.configUpdate.pipe(debounceTime(1000)).subscribe(content => {
       if (this.loginService.user) {
         firstValueFrom(this.http.patch(`/api/1/configs/${this.config.id}`, { content }))

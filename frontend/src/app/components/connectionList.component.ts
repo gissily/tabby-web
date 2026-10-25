@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { AppConnectorService, SocketProxy } from '../services/appConnector.service'
@@ -8,7 +8,6 @@ import { faCircle, faXmark } from '@fortawesome/free-solid-svg-icons'
   selector: 'connection-list',
   standalone: true,
   imports: [CommonModule, FaIconComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './connectionList.component.html',
 })
 export class ConnectionListComponent {

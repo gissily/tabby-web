@@ -1,12 +1,14 @@
 <div class="list-group list-group-light">
-    <div *ngFor="let socket of appConnector.sockets" class="list-group-item d-flex">
-        <fa-icon class="text-success me-2" [icon]="_circleIcon" [fixedWidth]="true"></fa-icon>
-        <div class="me-auto">
-            <div>{{socket.options.host}}:{{socket.options.port}}</div>
-            <div class="text-muted">via {{socket.url}}</div>
+    @for (socket of appConnector.sockets; track socket) {
+        <div class="list-group-item d-flex">
+            <fa-icon class="text-success me-2" [icon]="_circleIcon" [fixedWidth]="true"></fa-icon>
+            <div class="me-auto">
+                <div>{{socket.options.host}}:{{socket.options.port}}</div>
+                <div class="text-muted">via {{socket.url}}</div>
+            </div>
+            <button class="btn btn-link" (click)="closeSocket(socket)">
+                <fa-icon [icon]="_closeIcon" [fixedWidth]="true"></fa-icon>
+            </button>
         </div>
-        <button class="btn btn-link" (click)="closeSocket(socket)">
-            <fa-icon [icon]="_closeIcon" [fixedWidth]="true"></fa-icon>
-        </button>
-    </div>
+    }
 </div>

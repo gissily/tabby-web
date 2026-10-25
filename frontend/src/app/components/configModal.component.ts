@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { NgbActiveModal, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
 import { FaIconComponent } from '@fortawesome/angular-fontawesome'
@@ -11,7 +11,6 @@ import { Config, Version } from 'src/api'
   selector: 'config-modal',
   standalone: true,
   imports: [CommonModule, NgbDropdownModule, FaIconComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './configModal.component.html',
   // styleUrls: ['./settingsModal.component.scss'],
 })

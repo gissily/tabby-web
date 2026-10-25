@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { firstValueFrom } from 'rxjs'
@@ -29,7 +29,6 @@ const iconMap: Record<string, IconDefinition> = {
   selector: 'login',
   standalone: true,
   imports: [CommonModule, FaIconComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })

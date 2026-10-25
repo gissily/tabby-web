@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { ClipboardModule } from '@angular/cdk/clipboard'
@@ -14,12 +14,11 @@ import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons'
   selector: 'settings-modal',
   standalone: true,
   imports: [CommonModule, FormsModule, ClipboardModule, FaIconComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './settingsModal.component.html',
 })
 export class SettingsModalComponent {
-  user: User
-  customGatewayEnabled = false
+  user = signal<User | null>(null)
+  customGatewayEnabled = signal(false)
   _githubIcon = faGithub
   _copyIcon = faCopy
   _okIcon = faCheck
@@ -33,13 +32,25 @@ export class SettingsModalComponent {
     if (!loginService.user) {
       return
     }
-    this.user = { ...loginService.user }
-    this.customGatewayEnabled = !!this.user.custom_connection_gateway
+    this.user.set({ ...loginService.user })
+    this.customGatewayEnabled.set(!!this.user().custom_connection_gateway)
+  }
+
+  setGatewayField (field: 'custom_connection_gateway' | 'custom_connection_gateway_token', value: string): void {
+    const user = this.user()
+    if (user) {
+      if (field === 'custom_connection_gateway') {
+        user.custom_connection_gateway = value
+      } else {
+        user.custom_connection_gateway_token = value
+      }
+    }
   }
 
   async apply () {
-    if (this.loginService.user) {
-      Object.assign(this.loginService.user, this.user)
+    const user = this.user()
+    if (user && this.loginService.user) {
+      Object.assign(this.loginService.user, user)
       this.modalInstance.close()
       await this.loginService.updateUser()
     }

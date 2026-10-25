@@ -3,48 +3,56 @@
 </div>
 
 <div class="modal-body">
-    <div *ngIf="configService.activeConfig" class="header">
-        <div class="d-flex align-items-center py-2">
-            <div class="me-auto">
-                <label>Active config</label>
-                <div class="title">
-                    <fa-icon [icon]="_configIcon"></fa-icon>
-                    <span class="ms-2">{{configService.activeConfig.name}}</span>
+    @if (configService.activeConfig) {
+        <div class="header">
+            <div class="d-flex align-items-center py-2">
+                <div class="me-auto">
+                    <label>Active config</label>
+                    <div class="title">
+                        <fa-icon [icon]="_configIcon"></fa-icon>
+                        <span class="ms-2">{{configService.activeConfig.name}}</span>
+                    </div>
                 </div>
+
+                <button class="btn btn-semi me-2" (click)="configService.duplicateActiveConfig()">
+                    <fa-icon [icon]="_copyIcon" [fixedWidth]="true"></fa-icon>
+                </button>
+
+                <button class="btn btn-semi" (click)="deleteConfig()">
+                    <fa-icon [icon]="_deleteIcon" [fixedWidth]="true"></fa-icon>
+                </button>
             </div>
 
-            <button class="btn btn-semi me-2" (click)="configService.duplicateActiveConfig()">
-                <fa-icon [icon]="_copyIcon" [fixedWidth]="true"></fa-icon>
-            </button>
-
-            <button class="btn btn-semi" (click)="deleteConfig()">
-                <fa-icon [icon]="_deleteIcon" [fixedWidth]="true"></fa-icon>
-            </button>
-        </div>
-
-        <div *ngIf="configService.activeVersion" class="d-flex align-items-center py-2">
-            <div class="me-auto">App version:</div>
-            <div ngbDropdown>
-                <button class="btn btn-semi" ngbDropdownToggle>{{configService.activeVersion.version}}</button>
-                <div ngbDropdownMenu>
-                    <button *ngFor="let version of configService.versions" ngbDropdownItem [class.active]="version == configService.activeVersion" (click)="selectVersion(version)">{{version.version}}</button>
+            @if (configService.activeVersion) {
+                <div class="d-flex align-items-center py-2">
+                    <div class="me-auto">App version:</div>
+                    <div ngbDropdown>
+                        <button class="btn btn-semi" ngbDropdownToggle>{{configService.activeVersion.version}}</button>
+                        <div ngbDropdownMenu>
+                            @for (version of configService.versions; track version.version) {
+                                <button ngbDropdownItem [class.active]="version == configService.activeVersion" (click)="selectVersion(version)">{{version.version}}</button>
+                            }
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    </div>
+    }
 
-    <div *ngIf="configService.configs.length > 1" class="pt-3">
+    @if (configService.configs.length > 1) {
         <h5>Other configs</h5>
 
         <div class="list-group list-group-light">
-            <ng-container *ngFor="let config of configService.configs">
-                <button *ngIf="config.id !== configService.activeConfig?.id" class="list-group-item list-group-item-action" (click)="selectConfig(config)">
-                    <fa-icon [icon]="_configIcon"></fa-icon>
-                    <span>{{config.name}}</span>
-                </button>
-            </ng-container>
+            @for (config of configService.configs; track config.id) {
+                @if (config.id !== configService.activeConfig?.id) {
+                    <button class="list-group-item list-group-item-action" (click)="selectConfig(config)">
+                        <fa-icon [icon]="_configIcon"></fa-icon>
+                        <span>{{config.name}}</span>
+                    </button>
+                }
+            }
         </div>
-    </div>
+    }
 
     <div class="py-3">
         <button class="btn btn-semi w-100" (click)="createNewConfig()">

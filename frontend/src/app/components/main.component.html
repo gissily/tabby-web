@@ -5,37 +5,52 @@
         <fa-icon [icon]="_configIcon" [fixedWidth]="true" size="lg"></fa-icon>
     </button>
 
-    <button class="btn" (click)="openSettings()" *ngIf="loginService.user" title="Settings">
-        <fa-icon [icon]="_settingsIcon" [fixedWidth]="true" size="lg"></fa-icon>
-    </button>
+    @if (loginService.user) {
+        <button class="btn" (click)="openSettings()" title="Settings">
+            <fa-icon [icon]="_settingsIcon" [fixedWidth]="true"></fa-icon>
+        </button>
+    }
 
-    <a class="btn mt-3" href="/login" *ngIf="!loginService.user" title="Log in">
-        <fa-icon [icon]="_loginIcon" [fixedWidth]="true" size="lg"></fa-icon>
-    </a>
+    @if (!loginService.user) {
+        <a class="btn mt-3" href="/login" title="Log in">
+            <fa-icon [icon]="_loginIcon" [fixedWidth]="true"></fa-icon>
+        </a>
+    }
 
-    <button class="btn mt-3" (click)="logout()" *ngIf="loginService.user" title="Log out">
-        <fa-icon [icon]="_logoutIcon" [fixedWidth]="true" size="lg"></fa-icon>
-    </button>
+    @if (loginService.user) {
+        <button class="btn mt-3" (click)="logout()" title="Log out">
+            <fa-icon [icon]="_logoutIcon" [fixedWidth]="true"></fa-icon>
+        </button>
+    }
 </div>
 
 <div class="terminal">
-    <iframe #iframe [hidden]="!showApp"></iframe>
-    <div class="alert alert-warning d-flex border-0 m-0" *ngIf="noVersionsAdded">
-        <fa-icon class="me-2" [icon]="_warningIcon" [fixedWidth]="true"></fa-icon>
-        <div>
-            <div>You haven't added any Tabby versions, see here <a href="https://github.com/Eugeny/tabby-web#adding-tabby-app-versions" target="_blank">for instructions</a>.</div>
+    <iframe #iframe [hidden]="!showApp()"></iframe>
+
+    @if (noVersionsAdded()) {
+        <div class="alert alert-warning d-flex border-0 m-0">
+            <fa-icon class="me-2" [icon]="_warningIcon" [fixedWidth]="true"></fa-icon>
+            <div>
+                <div>You haven't added any Tabby versions, see here <a href="https://github.com/Eugeny/tabby-web#adding-tabby-app-versions" target="_blank">for instructions</a>.</div>
+            </div>
         </div>
-    </div>
-    <div class="alert alert-warning d-flex border-0 m-0" *ngIf="missingVersion">
-        <fa-icon class="me-2" [icon]="_warningIcon" [fixedWidth]="true"></fa-icon>
-        <div>
-            <div>You've last used this config with Tabby v{{missingVersion}}, which is no longer available on this server.</div>
+    }
+
+    @if (missingVersion()) {
+        <div class="alert alert-warning d-flex border-0 m-0">
+            <fa-icon class="me-2" [icon]="_warningIcon" [fixedWidth]="true"></fa-icon>
+            <div>
+                <div>You've last used this config with Tabby v{{missingVersion}}, which is no longer available on this server.</div>
+            </div>
         </div>
-    </div>
-    <div class="alert alert-warning d-flex border-0 m-0" *ngIf="showApp && !loginService.user">
-        <fa-icon class="me-2" [icon]="_saveIcon" [fixedWidth]="true"></fa-icon>
-        <div>
-            <div>To save profiles and settings, <a href="/login">log in</a>.</div>
+    }
+
+    @if (showApp() && !loginService.user) {
+        <div class="alert alert-warning d-flex border-0 m-0">
+            <fa-icon class="me-2" [icon]="_saveIcon" [fixedWidth]="true"></fa-icon>
+            <div>
+                <div>To save profiles and settings, <a href="/login">log in</a>.</div>
+            </div>
         </div>
-    </div>
+    }
 </div>

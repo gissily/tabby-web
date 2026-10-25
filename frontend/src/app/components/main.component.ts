@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpClient } from '@angular/common/http'
 import { Title } from '@angular/platform-browser'
@@ -17,7 +17,6 @@ import { Config, Version } from 'src/api'
   selector: 'main',
   standalone: true,
   imports: [CommonModule, FaIconComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
@@ -31,9 +30,9 @@ export class MainComponent {
   _saveIcon = faSave
   _warningIcon = faExclamationTriangle
 
-  showApp = false
-  noVersionsAdded = false
-  missingVersion: string|undefined
+  showApp = signal(false)
+  noVersionsAdded = signal(false)
+  missingVersion = signal<string | undefined>(undefined)
 
   @ViewChild('iframe') iframe: ElementRef
 
@@ -48,7 +47,7 @@ export class MainComponent {
     titleService.setTitle('Tabby')
     window.addEventListener('message', this.connectorRequestHandler)
     config.ready$.subscribe(() => {
-      this.noVersionsAdded = config.configs.length === 0
+      this.noVersionsAdded.set(config.configs.length === 0)
     })
   }
 
@@ -77,12 +76,12 @@ export class MainComponent {
   }
 
   unloadApp () {
-    this.showApp = false
+    this.showApp.set(false)
     this.iframe.nativeElement.src = 'about:blank'
   }
 
   async loadApp (config, version) {
-    this.showApp = true
+    this.showApp.set(true)
     this.iframe.nativeElement.src = '/terminal'
     if (this.loginService.user) {
       await firstValueFrom(this.http.patch(`/api/1/configs/${config.id}`, {
@@ -93,13 +92,13 @@ export class MainComponent {
 
   reloadApp (config: Config, version?: Version) {
     if (!version) {
-      this.missingVersion = config.last_used_with_version
+      this.missingVersion.set(config.last_used_with_version)
       version = this.config.getLatestStableVersion()
       if (!version) {
         return
       }
     }
-    this.missingVersion = undefined
+    this.missingVersion.set(undefined)
     // TODO check config incompatibility
     setTimeout(() => {
       this.appConnector.setState(config, version)

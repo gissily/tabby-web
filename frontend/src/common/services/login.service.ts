@@ -1,15 +1,17 @@
 import { AsyncSubject, firstValueFrom } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { Service, inject } from '@angular/core'
 import { User } from '../../api'
 
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LoginService {
   user: User | null
   ready$ = new AsyncSubject<void>()
 
-  constructor (private http: HttpClient) {
+  private readonly http = inject(HttpClient)
+
+  constructor () {
     this.init()
   }
 

@@ -1,12 +1,12 @@
 import semverCompare from 'semver/functions/compare-loose'
 import { AsyncSubject, Subject, firstValueFrom } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { Service, inject } from '@angular/core'
 import { Config, User, Version } from '../../api'
 import { LoginService } from './login.service'
 
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ConfigService {
   activeConfig$ = new Subject<Config>()
   activeVersion$ = new Subject<Version>()
@@ -22,10 +22,10 @@ export class ConfigService {
   private _activeConfig: Config|null = null
   private _activeVersion: Version|null = null
 
-  constructor (
-    private http: HttpClient,
-    private loginService: LoginService,
-  ) {
+  private readonly http = inject(HttpClient)
+  private readonly loginService = inject(LoginService)
+
+  constructor () {
     this.init()
   }
 
